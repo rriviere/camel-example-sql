@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Log4j Configuration File                                             -->
+<!--                                                                       -->
+<!--  For more configuration infromation and examples see the Jakarta      -->
+<!--  Log4j website: http://jakarta.apache.org/log4j                       -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+  <!-- ============================== -->
+  <!-- Appender setup -->
+  <!-- ============================== -->
+
+  <!-- Log DB calls (INFO level) -->
+  <appender name="AptusConversionLog" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="/var/log/auski-conversion/auski-conversion.log"/>
+    <param name="MaxFileSize" value="5MB"/>
+    <param name="MaxBackupIndex" value="10"/>
+    <layout class="org.apache.log4j.PatternLayout">
+     	<!-- Layout: Date,Time,Priority,RemoteAddr,UserID,Message\n -->
+       	<param name="ConversionPattern" value="%d{yyyy-MM-dd,HH:mm:ss.SSS},%m%n"/>
+    </layout>
+    <filter class="org.apache.log4j.varia.LevelRangeFilter">
+      <param name="levelMin" value="INFO" />
+      <param name="levelMax" value="INFO" />
+    </filter>
+  </appender>
+  
+  <appender name="AptusConversionDbLog" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="/var/log/auski-conversion/auski-conversion-db.csv"/>
+    <param name="MaxFileSize" value="5MB"/>
+    <param name="MaxBackupIndex" value="10"/>
+    <layout class="org.apache.log4j.PatternLayout">
+     	<!-- Layout: Date,Time,Priority,RemoteAddr,UserID,Message\n -->
+       	<param name="ConversionPattern" value="%d{yyyy-MM-dd,HH:mm:ss.SSS},%m%n"/>
+    </layout>
+    <filter class="org.apache.log4j.varia.LevelRangeFilter">
+      <param name="levelMin" value="INFO" />
+      <param name="levelMax" value="INFO" />
+    </filter>
+  </appender>  
+    
+ <!-- Log exceptions (ERROR level) -->
+  <appender name="AptusConversionLogError" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="/var/log/auski-conversion/auski-conversion-error.log"/>
+    <param name="MaxFileSize" value="5MB"/>
+    <param name="MaxBackupIndex" value="20"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <!-- Layout: Date Priority "thread" RemoteAddr UserID [category] Message\n -->
+      <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p &quot;%t&quot; [%c{3}] %m%n"/>
+    </layout>
+    <filter class="org.apache.log4j.varia.LevelRangeFilter">
+      <param name="levelMin" value="ERROR" />
+      <param name="levelMax" value="FATAL" />
+    </filter>
+  </appender>
+  
+  <!-- Log debug messages (DEBUG level)-->
+  <appender name="AptusConversionLogDebug" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="/var/log/auski-conversion/auski-conversion-error.log"/>
+    <param name="MaxFileSize" value="5MB"/>
+    <param name="MaxBackupIndex" value="10"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <!-- Layout: Date Priority "thread" RemoteAddr UserID [category] Message\n -->
+      <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p &quot;%t&quot; [%c{3}] %m%n"/>
+    </layout>
+    <filter class="org.apache.log4j.varia.LevelRangeFilter">
+      <param name="levelMin" value="TRACE" />
+      <param name="levelMax" value="WARN" />
+    </filter>
+  </appender>
+
+  <!-- ======================= -->
+  <!-- Setup the loggers       -->
+  <!-- ======================= --> 
+    
+  <!-- Used to capture Spring confuguration errors -->
+  <logger name="org.springframework" additivity="false">
+    <appender-ref ref="AptusConversionLog"/>
+    <appender-ref ref="AptusConversionLogError"/>
+  </logger> 
+  
+  <logger name="org.apache.camel" additivity="false">
+    <appender-ref ref="AptusConversionLog"/>
+    <appender-ref ref="AptusConversionLogError"/>
+  </logger>  
+
+  <logger name="auski_db_log" additivity="false">
+    <appender-ref ref="AptusConversionDbLog"/>
+  </logger>    
+  
+  <!-- ===========================================	-->
+  <!-- Setup the default logger 					-->
+  <!-- For debug logging:							-->
+  <!-- 	Set priority to DEBUG, 						-->
+  <!-- 	and uncomment the AptusConversionLogDebug 	-->
+  <!-- =========================================== 	-->
+  <root>
+    <priority value="INFO" />
+    <appender-ref ref="AptusConversionLogError"/>
+    <!-- <appender-ref ref="AptusConversionLogDebug"/> -->
+  </root>
+  
+</log4j:configuration>
+

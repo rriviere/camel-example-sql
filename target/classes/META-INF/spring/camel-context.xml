@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xsi:schemaLocation="
+          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+   
+ <!-- OTHER SPRING QUARTZ SCHEDULER
+  <bean id="date" class="org.apache.camel.routepolicy.quartz.SimpleDate"/>
+  <bean id="startPolicy" class="org.apache.camel.routepolicy.quartz.CronScheduledRoutePolicy">
+      <property name="routeStartTime" value="*/3 * * * * ?"/>
+  </bean>
+  --> 
+	<import resource="camel-routes.xml"/>
+	<import resource="database.xml"/>	
+	
+	<!-- BUSINESS LOGIC BEANS 
+	<bean id="orderBean" class="org.apache.camel.example.sql.OrderBean"/>
+	<bean id="productBean" class="org.apache.camel.example.sql.ProductBean"/>
+	-->
+	<camel:errorHandler id="errorHandler" type="LoggingErrorHandler" level="ERROR">
+	    <camel:redeliveryPolicy maximumRedeliveries="0"/>
+	</camel:errorHandler>		
+	
+	<!-- CAMEL CONTEXT -->
+	<camel:camelContext errorHandlerRef="errorHandler" trace="true">
+ 		
+	  <!-- PROPERTIES -->
+	  <camel:propertyPlaceholder location="classpath:sql.properties" id="placeholder"/>
+
+	  <!-- LOAD ROUTES -->
+	  <camel:routeContextRef ref="copyProducts"/>
+	  <camel:routeContextRef ref="copyManufacturer"/>
+	  <camel:routeContextRef ref="copyProductSize"/>
+	  <camel:routeContextRef ref="copyProcessStatus"/>
+	  <camel:routeContextRef ref="copyCategory"/>
+	  <camel:routeContextRef ref="copyTypeOption"/>
+	  
+	</camel:camelContext>
+</beans>
+
+

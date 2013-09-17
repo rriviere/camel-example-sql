@@ -1,0 +1,209 @@
+	    <route id="processProduct-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectProduct}}"/>
+	        <log message="SELECT_PRODUCT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertProductOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG_PRODUCT,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertProductStg}}"/>	        
+	        <log message="INSERT,CONV_STG_PRODUCT,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processProduct-route&amp;action=stop&amp;async=true"/>
+	    </route>
+	    
+	    <route id="processStatus-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectStatus}}"/>
+	        <log message="SELECT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertStatusOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertStatusStg}}"/>	        
+	        <log message="INSERT,CONV_STG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processStatus-route&amp;action=stop&amp;async=true"/>
+	    </route> 
+	    
+	    <route id="processManufacturer-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectManufacturer}}"/>
+	        <log message="SELECT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertManufacturerOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertManufacturerStg}}"/>	        
+	        <log message="INSERT,CONV_STG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processManufacturer-route&amp;action=stop&amp;async=true"/>
+	    </route>  
+	    
+	    <route id="processCategory-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectCategory}}"/>
+	        <log message="SELECT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertCategoryOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertCategoryStg}}"/>	        
+	        <log message="INSERT,CONV_STG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processCategory-route&amp;action=stop&amp;async=true"/>
+	    </route> 	    
+	    	      
+	    <route id="processTypeOption-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectTypeOption}}"/>
+	        <log message="SELECT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertTypeOptionOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertTypeOptionStg}}"/>	        
+	        <log message="INSERT,CONV_STG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processTypeOption-route&amp;action=stop&amp;async=true"/>
+	    </route> 
+	    
+	    <route id="processSizingChart-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectSizingChart}}"/>
+	        <log message="SELECT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertSizingChartOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertSizingChartStg}}"/>	        
+	        <log message="INSERT,CONV_STG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processSizingChart-route&amp;action=stop&amp;async=true"/>
+	    </route> 	
+	    
+	    <route id="processProductSize-route">    
+	        <description></description>
+	     
+	        <from uri="sourceSql:{{sql.selectProductSize}}"/>
+	        <log message="SELECT,${headers.CamelSqlQuery},${headers.CamelSqlRowCount}" loggingLevel="INFO" logName="auski_db_log"/>
+	        <transacted/>	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<redeliveryPolicy maximumRedeliveries="0"/>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <!-- ORIGINAL TABLES -->
+	        <to uri="targetSql:{{sql.insertProductSizeOrig}}"/>	        	        	
+	        <log message="INSERT,CONV_ORIG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	    	<!-- STAGING TABLES -->
+	        <to uri="targetSql:{{sql.insertProductSizeStg}}"/>	        
+	        <log message="INSERT,CONV_STG,${headers.CamelSqlQuery},${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <!-- STOP ROUTE -->
+	        <to uri="controlbus:route?routeId=processProductSize-route&amp;action=stop&amp;async=true"/>
+	    </route> 	        	
+	    	    	    
+    </routeContext> 
+   
+<camelContext xmlns="http://camel.apache.org/schema/spring"/></beans>
+ 
+
+  <!-- here is Camel configured with a number of routes 
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    <propertyPlaceholder location="classpath:sql.properties" id="placeholder"/>
+    <route id="generateOrder-route">
+        <description>use Camel property placeholder loaded from the given file route that generate new orders and insert them in the database</description>
+        <from uri="timer:foo?period=5s"/>
+        <transform>
+            <method method="generateOrder" ref="orderBean"></method>
+        </transform>
+        <to uri="sql:{{sql.insertOrder}}"/>
+        <log message="Inserted new order ${body[id]}"/>
+    </route>
+    <route id="processOrder-route">
+        <description>route that process the orders by picking up new rows from the database
+         and when done processing then update the row to mark it as processed</description>
+        <from uri="sql:{{sql.selectOrder}}?consumer.onConsume={{sql.markOrder}}"/>
+        <to uri="bean:orderBean?method=processOrder"/>
+        <log message="${body}"/>
+    </route>
+</camelContext>
+-->    
+<!-- 
+<route>
+	<from uri="timer://foo?repeatCount=1"/>
+	<transform>
+		<simple>Message at ${date:now:yyyy-MM-dd HH:mm:ss}</simple>
+	</transform>		
+	<to uri="sourceSql:{{sql.selectProduct}}?consumer.onConsume={{sql.insertProduct}}"/>
+	<log message="Routing product from source db to target db ${body}"/>
+</route>
+-->
+<!-- 
+log message="${body}" loggingLevel="INFO" logName="productLog"/
+<log message="${header.CamelSqlUpdateCount} rows inserted into conv_orig"/>
+<log message="inserted product ${body[product_id]}" loggingLevel="INFO"/>
+-->

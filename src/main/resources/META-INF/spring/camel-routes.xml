@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+	
+	
+    <routeContext id="copyProducts" xmlns="http://camel.apache.org/schema/spring">
+	    <route id="processProduct-route">        
+	        <from uri="sourceSql:{{sql.selectProduct}}"/>
+	        <log message="SELECT_PRODUCT" loggingLevel="INFO" logName="auski_db_log"/>
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>
+		  		        	        
+	        <to uri="targetSql:{{sql.insertProductOrig}}"/>	        	        	
+	        <log message="INSERT_PRODUCT,CONV_ORIG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	        <to uri="targetSql:{{sql.insertProductStg}}"/>	        
+	        <log message="INSERT_PRODUCT,CONV_STG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   	        
+	        <to uri="controlbus:route?routeId=processProduct-route&amp;action=stop&amp;async=true"/>
+	    </route>
+	</routeContext> 
+	 
+	<routeContext id="copyProcessStatus" xmlns="http://camel.apache.org/schema/spring"> 
+	    <route id="processStatus-route">    
+	        <from uri="sourceSql:{{sql.selectStatus}}"/>
+	        <log message="SELECT_PROCESS_STATUS" loggingLevel="INFO" logName="auski_db_log"/>              	        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>
+		  		        
+	        <to uri="targetSql:{{sql.insertStatusOrig}}"/>	        	        	
+	        <log message="INSERT_PROCESS_STATUS,CONV_ORIG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	        <to uri="targetSql:{{sql.insertStatusStg}}"/>	        
+	        <log message="INSERT_PROCESS_STATUS,CONV_STG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>           
+	        <to uri="controlbus:route?routeId=processStatus-route&amp;action=stop&amp;async=true"/>
+	    </route>	
+	</routeContext>  
+	
+	<routeContext id="copyManufacturer" xmlns="http://camel.apache.org/schema/spring"> 	
+	    <route id="processManufacturer-route">    
+	        <from uri="sourceSql:{{sql.selectManufacturer}}"/>
+	        <log message="SELECT_MANUFACTURER" loggingLevel="INFO" logName="auski_db_log"/>        	      
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>
+		  		        
+	        <to uri="targetSql:{{sql.insertManufacturerOrig}}"/>	        	        	
+	        <log message="INSERT_MANUFACTURER,CONV_ORIG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	        <to uri="targetSql:{{sql.insertManufacturerStg}}"/>	        
+	        <log message="INSERT_MANUFACTURER,CONV_STG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    
+	        <to uri="controlbus:route?routeId=processManufacturer-route&amp;action=stop&amp;async=true"/>
+	    </route>  
+	</routeContext> 
+	
+	<routeContext id="copyCategory" xmlns="http://camel.apache.org/schema/spring">    
+	    <route id="processCategory-route">    
+	        <from uri="sourceSql:{{sql.selectCategory}}"/>
+	        <log message="SELECT_CATEGORY" loggingLevel="INFO" logName="auski_db_log"/>        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <to uri="targetSql:{{sql.insertCategoryOrig}}"/>	        	        	
+	        <log message="INSERT_CATEGORY,CONV_ORIG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	        <to uri="targetSql:{{sql.insertCategoryStg}}"/>	        
+	        <log message="INSERT_CATEGORY,CONV_STG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <to uri="controlbus:route?routeId=processCategory-route&amp;action=stop&amp;async=true"/>
+	    </route> 
+	</routeContext> 
+	
+	<routeContext id="copyTypeOption" xmlns="http://camel.apache.org/schema/spring">     	    
+	    <route id="processTypeOption-route">    
+	        <from uri="sourceSql:{{sql.selectTypeOption}}"/>
+	        <log message="SELECT_TYPE_OPTION" loggingLevel="INFO" logName="auski_db_log"/>        
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <to uri="targetSql:{{sql.insertTypeOptionOrig}}"/>	        	        	
+	        <log message="INSERT_TYPE_OPTION,CONV_ORIG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	        <to uri="targetSql:{{sql.insertTypeOptionStg}}"/>	        
+	        <log message="INSERT_TYPE_OPTION,CONV_STG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <to uri="controlbus:route?routeId=processTypeOption-route&amp;action=stop&amp;async=true"/>
+	    </route>
+	</routeContext>
+	  
+	<routeContext id="copyProductSize" xmlns="http://camel.apache.org/schema/spring">    
+	    <route id="processProductSize-route">    
+	        <from uri="sourceSql:{{sql.selectProductSize}}"/>
+	        <log message="SELECT_PRODUCT_SIZE" loggingLevel="INFO" logName="auski_db_log"/>       
+	        <onException>
+				<exception>java.sql.SQLException</exception>
+				<to uri="log:xml?level=ERROR"/>
+		  	</onException>	      
+	        
+	        <to uri="targetSql:{{sql.insertProductSizeOrig}}"/>	        	        	
+	        <log message="INSERT_PRODUCT_SIZE,CONV_ORIG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>        
+	    
+	        <to uri="targetSql:{{sql.insertProductSizeStg}}"/>	        
+	        <log message="INSERT_PRODUCT_SIZE,CONV_STG,${headers.CamelSqlUpdateCount}" loggingLevel="INFO" logName="auski_db_log"/>   
+		    	        
+	        <to uri="controlbus:route?routeId=processProductSize-route&amp;action=stop&amp;async=true"/>
+	    </route> 	        	   	    	    	    	    
+    </routeContext>
+    	     	        	  	    	   
+</beans>
